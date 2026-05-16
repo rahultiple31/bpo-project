@@ -3,7 +3,7 @@ replicaCount: 2
 image:
   repository: ghcr.io/rahultiple31/nexora-cx
   pullPolicy: Always
-  tag: b8b6683ee9b392f6d08b68f0179222f5062fff60
+  tag: 503a53fafeadeb634ba3fbe6d527d6db18f2d716
 
 imagePullSecrets: []
 nameOverride: ""
