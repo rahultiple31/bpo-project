@@ -25,7 +25,7 @@ spec:
       containers:
         - name: website
           image: ghcr.io/rahultiple31/nexora-cx:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8080

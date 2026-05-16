@@ -3,11 +3,9 @@ Nexora CX has been installed.
 Release: {{ .Release.Name }}
 Namespace: {{ .Release.Namespace }}
 
-{{- if .Values.ingress.enabled }}
-Hosts:
-{{- range .Values.ingress.hosts }}
-  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .host }}
-{{- end }}
+{{- if eq .Values.service.type "NodePort" }}
+NodePort service:
+  http://<node-ip>:{{ .Values.service.nodePort }}
 {{- else }}
 Run this command to port-forward locally:
   kubectl port-forward svc/{{ include "nexora-cx.fullname" . }} 8080:{{ .Values.service.port }} -n {{ .Release.Namespace }}

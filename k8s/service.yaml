@@ -7,10 +7,11 @@ metadata:
     app.kubernetes.io/name: nexora-cx
     app.kubernetes.io/part-of: bpo-website
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app.kubernetes.io/name: nexora-cx
   ports:
     - name: http
       port: 80
       targetPort: http
+      nodePort: 30080
