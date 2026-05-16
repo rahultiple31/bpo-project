@@ -1,4 +1,4 @@
-name: Build and Publish Nexora CX
+name: Build and Publish MicroShield BPO
 
 on:
   push:

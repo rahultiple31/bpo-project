@@ -1,6 +1,6 @@
-# nexora-cx Helm Chart
+# MicroShield BPO Helm Chart
 
-Deploys the Nexora CX static BPO website on Kubernetes.
+Deploys the MicroShield BPO static website on Kubernetes.
 
 ## Install
 

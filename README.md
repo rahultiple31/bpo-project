@@ -1,6 +1,6 @@
-# Nexora CX BPO Website
+# MicroShield BPO Website
 
-Nexora CX is an original BPO and customer experience website starter inspired by common CX outsourcing patterns: AI-assisted support, omnichannel operations, BPaaS, consulting, digital capabilities, industry coverage, proof metrics, case studies, and contact conversion.
+MicroShield BPO is an original BPO and customer experience website starter inspired by common CX outsourcing patterns: AI-assisted support, omnichannel operations, BPaaS, consulting, digital capabilities, industry coverage, proof metrics, case studies, and contact conversion.
 
 Reference reviewed: <https://isonxperiences.com/>
 
@@ -30,7 +30,7 @@ Open <http://localhost:8080>.
 ```bash
 git init
 git add .
-git commit -m "Add Nexora CX BPO website and Kubernetes deployment"
+git commit -m "Add MicroShield BPO website and Kubernetes deployment"
 git branch -M main
 git remote add origin https://github.com/<your-org>/<your-repo>.git
 git push -u origin main

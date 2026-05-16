@@ -72,6 +72,7 @@ textarea {
 .brand {
   display: inline-flex;
   align-items: center;
+  flex-shrink: 0;
   gap: 10px;
   font-weight: 800;
   letter-spacing: 0;
@@ -90,6 +91,7 @@ textarea {
 
 .brand-text {
   font-size: 1.05rem;
+  white-space: nowrap;
 }
 
 .site-nav {
@@ -173,8 +175,8 @@ textarea {
 
 .hero h1 {
   margin: 0;
-  max-width: 9ch;
-  font-size: clamp(4.2rem, 13vw, 10rem);
+  max-width: 13ch;
+  font-size: clamp(3.5rem, 9vw, 7.5rem);
   line-height: 0.88;
   letter-spacing: 0;
 }
@@ -673,7 +675,7 @@ p {
   }
 
   .hero h1 {
-    font-size: clamp(4rem, 18vw, 6.6rem);
+    font-size: clamp(3.5rem, 14vw, 5.8rem);
   }
 
   .hero-stats,

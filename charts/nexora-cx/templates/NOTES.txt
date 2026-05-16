@@ -1,4 +1,4 @@
-Nexora CX has been installed.
+MicroShield BPO has been installed.
 
 Release: {{ .Release.Name }}
 Namespace: {{ .Release.Namespace }}
