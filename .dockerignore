@@ -1,0 +1,8 @@
+.git
+.github
+k8s
+charts
+README.md
+*.log
+.DS_Store
+node_modules

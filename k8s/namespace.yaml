@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nexora-cx
+  labels:
+    app.kubernetes.io/name: nexora-cx
+    app.kubernetes.io/part-of: bpo-website
