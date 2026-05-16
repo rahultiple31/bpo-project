@@ -8,7 +8,7 @@ Deploys the Nexora CX static BPO website on Kubernetes.
 helm upgrade --install nexora-cx ./charts/nexora-cx \
   --namespace nexora-cx \
   --create-namespace \
-  --set image.repository=ghcr.io/<your-org>/nexora-cx \
+  --set image.repository=ghcr.io/rahultiple31/nexora-cx \
   --set image.tag=<tag>
 ```
 
@@ -17,7 +17,7 @@ helm upgrade --install nexora-cx ./charts/nexora-cx \
 | Value | Default | Description |
 | --- | --- | --- |
 | `replicaCount` | `2` | Pod replicas when autoscaling is disabled |
-| `image.repository` | `ghcr.io/your-org/nexora-cx` | Container image repository |
+| `image.repository` | `ghcr.io/rahultiple31/nexora-cx` | Container image repository |
 | `image.tag` | `latest` | Container image tag |
 | `service.type` | `ClusterIP` | Kubernetes Service type |
 | `ingress.enabled` | `true` | Create an Ingress |

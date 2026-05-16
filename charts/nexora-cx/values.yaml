@@ -1,8 +1,8 @@
 replicaCount: 2
 
 image:
-  repository: ghcr.io/your-org/nexora-cx
-  pullPolicy: IfNotPresent
+  repository: ghcr.io/rahultiple31/nexora-cx
+  pullPolicy: Always
   tag: latest
 
 imagePullSecrets: []

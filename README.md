@@ -10,7 +10,7 @@ Reference reviewed: <https://isonxperiences.com/>
 - nginx production runtime: `Dockerfile`, `nginx.conf`
 - Raw Kubernetes manifests: `k8s/`
 - Helm chart: `charts/nexora-cx/`
-- GitHub Actions CI/CD: `.github/workflows/ci-cd.yml`
+- GitHub Actions image build pipeline: `.github/workflows/ci-cd.yml`
 
 ## Run locally
 
@@ -47,7 +47,7 @@ ghcr.io/<github-owner>/nexora-cx
 Update `k8s/deployment.yaml`:
 
 ```yaml
-image: ghcr.io/<your-org>/nexora-cx:<tag>
+image: ghcr.io/rahultiple31/nexora-cx:<tag>
 ```
 
 Update `k8s/ingress.yaml`:
@@ -82,7 +82,7 @@ Install or upgrade:
 helm upgrade --install nexora-cx charts/nexora-cx \
   --namespace nexora-cx \
   --create-namespace \
-  --set image.repository=ghcr.io/<your-org>/nexora-cx \
+  --set image.repository=ghcr.io/rahultiple31/nexora-cx \
   --set image.tag=<tag> \
   --set ingress.hosts[0].host=your-domain.example \
   --set ingress.tls[0].hosts[0]=your-domain.example \
@@ -105,27 +105,13 @@ kubectl port-forward svc/nexora-cx 8080:80 -n nexora-cx
 
 Open <http://localhost:8080>.
 
-## GitHub Actions deployment setup
+## GitHub Actions and ArgoCD setup
 
-The included workflow validates Helm, builds the Docker image, pushes it to GHCR, then deploys the chart on pushes to `main`.
+The included workflow validates Helm, builds the Docker image, pushes it to GHCR, then updates `charts/nexora-cx/values.yaml` with the new immutable image tag on pushes to `main`.
 
-Create this repository secret:
+Point ArgoCD at this repository and the `charts/nexora-cx` chart path. ArgoCD will deploy the chart from Git; the GitHub Actions workflow does not connect to the Kubernetes cluster directly.
 
-```text
-KUBE_CONFIG
-```
-
-The value must be a base64-encoded kubeconfig for the target cluster:
-
-```bash
-base64 -w 0 ~/.kube/config
-```
-
-On macOS:
-
-```bash
-base64 ~/.kube/config | tr -d '\n'
-```
+In repository settings, make sure GitHub Actions has permission to write repository contents so it can commit the updated Helm image tag.
 
 ## Customize
 
