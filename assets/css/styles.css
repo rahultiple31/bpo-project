@@ -303,6 +303,18 @@ p {
   font-size: 1.08rem;
 }
 
+.founder-note {
+  margin-top: 22px;
+  padding-left: 18px;
+  border-left: 4px solid var(--coral);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.founder-note strong {
+  color: var(--teal-dark);
+}
+
 .service-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
