@@ -24,7 +24,7 @@ spec:
         fsGroup: 101
       containers:
         - name: website
-          image: rahultiple31/nexora-cx:latest
+          image: rahultipledocker/nexora-cx:latest
           imagePullPolicy: Always
           ports:
             - name: http

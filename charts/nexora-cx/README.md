@@ -17,7 +17,7 @@ helm upgrade --install nexora-cx ./charts/nexora-cx \
 | Value | Default | Description |
 | --- | --- | --- |
 | `replicaCount` | `2` | Pod replicas when autoscaling is disabled |
-| `image.repository` | `rahultiple31/nexora-cx` | Container image repository |
+| `image.repository` | `rahultipledocker/nexora-cx` | Container image repository |
 | `image.tag` | `latest` | Container image tag |
 | `service.type` | `NodePort` | Kubernetes Service type |
 | `service.nodePort` | `30080` | NodePort used to expose the app locally |

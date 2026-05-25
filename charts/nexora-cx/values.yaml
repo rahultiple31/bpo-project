@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: rahultiple31/nexora-cx
+  repository: rahultipledocker/nexora-cx
   pullPolicy: Always
   tag: latest
 
