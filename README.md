@@ -7,18 +7,28 @@ Reference reviewed: <https://isonxperiences.com/>
 ## What is included
 
 - Static website source: `index.html`, `assets/css/styles.css`, `assets/js/main.js`
+- Static build and test scripts: `npm run build`, `npm test`
 - nginx production runtime: `Dockerfile`, `nginx.conf`
 - Raw Kubernetes manifests: `k8s/` using a NodePort service for local clusters
 - Helm chart: `charts/nexora-cx/`
-- GitHub Actions image build pipeline: `.github/workflows/ci-cd.yml`
+- GitHub Actions CI/CD pipeline that builds, tests, creates a Docker image, and pushes it to Docker Hub
 
 ## Run locally
 
 Open `index.html` in a browser, or serve it with any static web server.
 
+Build and test the production static output:
+
+```bash
+npm ci
+npm run build
+npm test
+```
+
 With Docker:
 
 ```bash
+npm run build
 docker build -t nexora-cx:local .
 docker run --rm -p 8080:8080 nexora-cx:local
 ```
@@ -36,18 +46,35 @@ git remote add origin https://github.com/<your-org>/<your-repo>.git
 git push -u origin main
 ```
 
+## GitHub Actions and Docker Hub setup
+
+The included workflow runs this sequence on pushes and pull requests:
+
+```text
+checkout -> npm ci -> build CSS and JS -> test code -> Docker build -> Docker Hub push
+```
+
+Configure these repository secrets before pushing to `main`:
+
+```text
+DOCKERHUB_USERNAME
+DOCKERHUB_TOKEN
+```
+
 The workflow publishes the image to:
 
 ```text
-ghcr.io/<github-owner>/nexora-cx
+docker.io/<dockerhub-username>/nexora-cx
 ```
+
+Pull requests build and test the site and Docker image, but do not push to Docker Hub.
 
 ## Deploy with raw Kubernetes manifests
 
 Update `k8s/deployment.yaml`:
 
 ```yaml
-image: ghcr.io/rahultiple31/nexora-cx:<tag>
+image: <dockerhub-username>/nexora-cx:<tag>
 ```
 
 Apply:
@@ -80,7 +107,7 @@ Install or upgrade:
 helm upgrade --install nexora-cx charts/nexora-cx \
   --namespace nexora-cx \
   --create-namespace \
-  --set image.repository=ghcr.io/rahultiple31/nexora-cx \
+  --set image.repository=<dockerhub-username>/nexora-cx \
   --set image.tag=<tag>
 ```
 
@@ -97,13 +124,11 @@ helm upgrade --install nexora-cx charts/nexora-cx \
 
 Open `http://<node-ip>:30080`.
 
-## GitHub Actions and ArgoCD setup
-
-The included workflow validates Helm, builds the Docker image, pushes it to GHCR, then updates `charts/nexora-cx/values.yaml` with the new immutable image tag on pushes to `main`.
+## Helm and ArgoCD setup
 
 Point ArgoCD at this repository and the `charts/nexora-cx` chart path. ArgoCD will deploy the chart from Git; the GitHub Actions workflow does not connect to the Kubernetes cluster directly.
 
-In repository settings, make sure GitHub Actions has permission to write repository contents so it can commit the updated Helm image tag.
+The Helm chart is intentionally not part of the CI/CD workflow. Update chart values manually or let ArgoCD/image automation manage image tags for your environment.
 
 ## Customize
 

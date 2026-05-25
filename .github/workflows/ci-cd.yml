@@ -1,61 +1,56 @@
-name: Build and Publish MicroShield BPO
+name: Build, Test, and Publish Docker Image
 
 on:
   push:
     branches:
       - main
-    paths-ignore:
-      - "charts/nexora-cx/values.yaml"
   pull_request:
     branches:
       - main
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/nexora-cx
   IMAGE_TAG: ${{ github.sha }}
-  HELM_VALUES_FILE: charts/nexora-cx/values.yaml
 
 jobs:
-  validate:
-    name: Validate source and Helm chart
+  build-test-docker:
+    name: Build site, test code, and publish image
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Helm
-        uses: azure/setup-helm@v4
-        with:
-          version: v3.15.4
-
-      - name: Lint Helm chart
-        run: helm lint charts/nexora-cx
-
-      - name: Render Helm manifests
-        run: helm template nexora-cx charts/nexora-cx --namespace nexora-cx
-
-  build:
-    name: Build and push image
-    runs-on: ubuntu-latest
-    needs: validate
     permissions:
       contents: read
-      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build CSS and JS
+        run: npm run build
+
+      - name: Test code
+        run: npm test
+
+      - name: Set Docker image name
+        run: echo "IMAGE_NAME=${DOCKERHUB_USERNAME:-local}/nexora-cx" >> "$GITHUB_ENV"
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to GHCR
+      - name: Log in to Docker Hub
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Docker metadata
         id: meta
@@ -66,7 +61,7 @@ jobs:
             type=raw,value=${{ env.IMAGE_TAG }}
             type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Build image
+      - name: Build Docker image and push to Docker Hub
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -75,40 +70,3 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-  update-helm-image:
-    name: Update Helm image tag
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Update Helm values image
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-
-          values_file = Path("${{ env.HELM_VALUES_FILE }}")
-          text = values_file.read_text()
-          repository = "${{ env.IMAGE_NAME }}"
-          tag = "${{ env.IMAGE_TAG }}"
-          text = re.sub(r"(?m)^(\s*repository:\s*).*$", lambda match: f"{match.group(1)}{repository}", text, count=1)
-          text = re.sub(r"(?m)^(\s*tag:\s*).*$", lambda match: f"{match.group(1)}{tag}", text, count=1)
-          values_file.write_text(text)
-          PY
-
-      - name: Commit Helm values update
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "${{ env.HELM_VALUES_FILE }}"
-          git diff --cached --quiet && exit 0
-          git commit -m "chore: update Helm image tag to ${IMAGE_TAG} [skip ci]"
-          git push

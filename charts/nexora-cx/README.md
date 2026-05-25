@@ -8,7 +8,7 @@ Deploys the MicroShield BPO static website on Kubernetes.
 helm upgrade --install nexora-cx ./charts/nexora-cx \
   --namespace nexora-cx \
   --create-namespace \
-  --set image.repository=ghcr.io/rahultiple31/nexora-cx \
+  --set image.repository=<dockerhub-username>/nexora-cx \
   --set image.tag=<tag>
 ```
 
@@ -17,7 +17,7 @@ helm upgrade --install nexora-cx ./charts/nexora-cx \
 | Value | Default | Description |
 | --- | --- | --- |
 | `replicaCount` | `2` | Pod replicas when autoscaling is disabled |
-| `image.repository` | `ghcr.io/rahultiple31/nexora-cx` | Container image repository |
+| `image.repository` | `rahultiple31/nexora-cx` | Container image repository |
 | `image.tag` | `latest` | Container image tag |
 | `service.type` | `NodePort` | Kubernetes Service type |
 | `service.nodePort` | `30080` | NodePort used to expose the app locally |

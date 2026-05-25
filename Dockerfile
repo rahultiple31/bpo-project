@@ -4,8 +4,7 @@ LABEL org.opencontainers.image.title="microshield-bpo-site"
 LABEL org.opencontainers.image.description="Static MicroShield BPO website served by nginx"
 
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY index.html /usr/share/nginx/html/index.html
-COPY assets /usr/share/nginx/html/assets
+COPY dist /usr/share/nginx/html
 
 RUN mkdir -p /tmp/nginx/client_temp /tmp/nginx/proxy_temp /tmp/nginx/fastcgi_temp /tmp/nginx/uwsgi_temp /tmp/nginx/scgi_temp \
     && chown -R 101:101 /tmp/nginx /usr/share/nginx/html

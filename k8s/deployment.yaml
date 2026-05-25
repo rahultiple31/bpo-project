@@ -24,7 +24,7 @@ spec:
         fsGroup: 101
       containers:
         - name: website
-          image: ghcr.io/rahultiple31/nexora-cx:latest
+          image: rahultiple31/nexora-cx:latest
           imagePullPolicy: Always
           ports:
             - name: http
