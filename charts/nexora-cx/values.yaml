@@ -45,8 +45,8 @@ resources:
 
 autoscaling:
   enabled: true
-  minReplicas: 2
-  maxReplicas: 5
+  minReplicas: 5
+  maxReplicas: 10
   targetCPUUtilizationPercentage: 70
 
 probes:
